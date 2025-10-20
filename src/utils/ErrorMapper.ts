@@ -1,3 +1,7 @@
+/** biome-ignore-all lint/complexity/noStaticOnlyClass: x */
+/** biome-ignore-all lint/suspicious/noPrototypeBuiltins: x */
+/** biome-ignore-all lint/suspicious/noAssignInExpressions: x */
+/** biome-ignore-all lint/complexity/noThisInStatic: x */
 import { SourceMapConsumer } from "source-map";
 
 export class ErrorMapper {

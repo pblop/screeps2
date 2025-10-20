@@ -12,6 +12,7 @@ declare global {
   // Memory extension samples
   interface Memory {
     uuid: number;
+    // biome-ignore lint/suspicious/noExplicitAny: x
     log: any;
   }
 
@@ -24,6 +25,7 @@ declare global {
   // Syntax for adding proprties to `global` (ex "global.log")
   namespace NodeJS {
     interface Global {
+      // biome-ignore lint/suspicious/noExplicitAny: x
       log: any;
     }
   }
