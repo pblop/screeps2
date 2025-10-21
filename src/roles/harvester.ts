@@ -1,4 +1,11 @@
-export const roleHarvester = {
+export const roleHarvester: Role = {
+  str: 'harvester',
+  create: (): CreepMemory => {
+    return {
+      role: roleHarvester.str,
+      working: true
+    };
+  },
   run: (creep: Creep) => {
     if (creep.memory.working && creep.store.getFreeCapacity() === 0) {
       creep.memory.working = false;

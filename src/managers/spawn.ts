@@ -1,31 +1,31 @@
+import { roleHarvester } from "roles/harvester";
+import { roleBuilder } from "roles/builder";
+// import { roleUpgrader } from "roles/upgrader";
+
+const roles: [Role, number][] = [[roleHarvester, 4]];
+
 export const managerSpawn = {
   run: (spawn: StructureSpawn) => {
-    const maxHarvesters = 4;
-
-
-    const harvesters = _.filter(Game.creeps, (creep) => creep.memory.role === 'harvester');
-
+    // Spawn is busy
     if (spawn.spawning) {
-      return; // Spawn is busy
+      return;
     }
 
-    // Try to spawn a harvester
-    if (harvesters.length < maxHarvesters) {
-      const newName = `Harvester${Game.time}`;
-      const body = [WORK, CARRY, MOVE]; // 200 energy
+    for (const [role, maxCount] of roles) {
+      const creeps = _.filter(Game.creeps, (creep) => creep.memory.role === role.str);
+      if (creeps.length < maxCount) {
+        const newName = `${role.str}${Game.time}`;
+        const body = [WORK, CARRY, MOVE]; // 200 energy
 
-      const memory: CreepMemory = {
-        role: 'harvester',
-        working: true
-      };
+        const memory = role.create();
 
-      // Check if we have enough energy
-      if (spawn.room.energyAvailable >= 200) {
-        spawn.spawnCreep(body, newName, { memory: memory });
-        console.log(`Spawning new harvester: ${newName}`);
+        // Check if we have enough energy
+        if (spawn.room.energyAvailable >= 200) {
+          spawn.spawnCreep(body, newName, { memory: memory });
+          console.log(`Spawning new ${memory.role}: ${newName}`);
+        }
+        return;
       }
     }
-
-    // ... add logic for builders, upgraders, etc. ...
   }
 };
