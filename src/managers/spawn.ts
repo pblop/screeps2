@@ -1,34 +1,46 @@
-import { roleHarvester } from "roles/harvester";
+import { roleGeneric } from "roles/generic";
 import { roleBuilder } from "roles/builder";
 import { roleUpgrader } from "roles/upgrader";
 // import { roleUpgrader } from "roles/upgrader";
 
+function getCreepCountByRole(roleStr: string): number {
+  return _.filter(Game.creeps, (creep) => creep.memory.role === roleStr).length;
+}
+
+function getCreepsRemainingToSpawn(counts: [Role, number][]): number {
+  return _.sum(counts, ([role, maxCount]) => {
+    return Math.max(0, maxCount - getCreepCountByRole(role.str));
+  });
+}
 
 export const managerSpawn = {
   run: (spawn: StructureSpawn) => {
-    // Spawn is busy
-    if (spawn.spawning) {
-      return;
-    }
 
-    const controllerLevel = spawn.room.controller?.level || 0;
-    if (controllerLevel === 1) {
-      const roles: [Role, number][] = [[roleHarvester, 4], [roleUpgrader, 2]];
+    const controller = spawn.room.controller;
+    const controllerLevel = controller?.level || 0;
+    if (controllerLevel === 1 || controllerLevel === 2) {
+      const roles: [Role, number][] = [[roleGeneric, 10]];
 
-      for (const [role, maxCount] of roles) {
-        const creeps = _.filter(Game.creeps, (creep) => creep.memory.role === role.str);
-        if (creeps.length < maxCount) {
-          const newName = `${role.str}${Game.time}`;
-          const body = [WORK, CARRY, MOVE]; // 200 energy
+      // Spawn is busy
+      if (spawn.spawning || getCreepsRemainingToSpawn(roles) === 0) {
+        Memory.genericTarget = controller?.id;
+      } else {
+        Memory.genericTarget = spawn.id;
+        for (const [role, maxCount] of roles) {
+          const creeps = _.filter(Game.creeps, (creep) => creep.memory.role === role.str);
+          if (creeps.length < maxCount) {
+            const newName = `${role.str}${Game.time}`;
+            const body = [WORK, CARRY, MOVE]; // 200 energy
 
-          const memory = role.create();
+            const memory = role.create();
 
-          // Check if we have enough energy
-          if (spawn.room.energyAvailable >= 200) {
-            spawn.spawnCreep(body, newName, { memory: memory });
-            console.log(`Spawning new ${memory.role}: ${newName}`);
+            // Check if we have enough energy
+            if (spawn.room.energyAvailable >= 200) {
+              spawn.spawnCreep(body, newName, { memory: memory });
+              console.log(`Spawning new ${memory.role}: ${newName}`);
+            }
+            return;
           }
-          return;
         }
       }
     }

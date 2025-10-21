@@ -1,8 +1,8 @@
-export const roleHarvester: Role = {
-  str: 'harvester',
+export const roleGeneric: Role = {
+  str: 'generic',
   create: (): CreepMemory => {
     return {
-      role: roleHarvester.str,
+      role: roleGeneric.str,
       working: true
     };
   },
@@ -22,20 +22,16 @@ export const roleHarvester: Role = {
       if (source && creep.harvest(source) === ERR_NOT_IN_RANGE) {
         creep.moveTo(source, { visualizePathStyle: { stroke: '#ffaa00' } });
       }
-    } else {
+    } else if (Memory.genericTarget) {
       // Find targets
-      const target = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
-        filter: (structure): structure is StructureSpawn | StructureExtension | StructureTower => {
-          // This "type predicate" (the 'is' part) tells TS
-          // that the returned structures will be one of these types.
-          return (structure.structureType === STRUCTURE_EXTENSION ||
-                  structure.structureType === STRUCTURE_SPAWN ||
-                  structure.structureType === STRUCTURE_TOWER) &&
-                  structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+      const target = Game.getObjectById<Structure>(Memory.genericTarget);
+      if (target?.structureType === STRUCTURE_CONTROLLER) {
+        if (creep.upgradeController(target as StructureController) === ERR_NOT_IN_RANGE) {
+          creep.moveTo(target, { visualizePathStyle: { stroke: '#ffffff' } });
         }
-      });
-
-      if (target) {
+      } else if (target?.structureType === STRUCTURE_SPAWN ||
+                 target?.structureType === STRUCTURE_EXTENSION ||
+                 target?.structureType === STRUCTURE_TOWER) {
         if (creep.transfer(target, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
           creep.moveTo(target, { visualizePathStyle: { stroke: '#ffffff' } });
         }

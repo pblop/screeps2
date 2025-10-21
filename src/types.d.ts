@@ -11,6 +11,7 @@ interface CreepMemory {
 
 interface Memory {
   uuid: number;
+  genericTarget: Id<Structure> | undefined;
   // log: any;
 }
 

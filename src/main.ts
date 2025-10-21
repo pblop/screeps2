@@ -1,11 +1,10 @@
 import { managerSpawn } from "managers/spawn";
-import { roleHarvester } from "roles/harvester";
+import { roleGeneric } from "roles/generic";
 import { roleUpgrader } from "roles/upgrader";
 import { ErrorMapper } from "utils/ErrorMapper";
 
 const roles: { [name: string]: Role } = {
-  harvester: roleHarvester,
-  upgrader: roleUpgrader,
+  generic: roleGeneric,
 }
 export const loop = ErrorMapper.wrapLoop(() => {
   // SPAWNING LOGIC
