@@ -1,8 +1,9 @@
 import { roleHarvester } from "roles/harvester";
 import { roleBuilder } from "roles/builder";
+import { roleUpgrader } from "roles/upgrader";
 // import { roleUpgrader } from "roles/upgrader";
 
-const roles: [Role, number][] = [[roleHarvester, 4]];
+const roles: [Role, number][] = [[roleHarvester, 4], [roleUpgrader, 2]];
 
 export const managerSpawn = {
   run: (spawn: StructureSpawn) => {
