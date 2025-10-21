@@ -18,7 +18,7 @@ export const managerSpawn = {
 
     const controller = spawn.room.controller;
     const controllerLevel = controller?.level || 0;
-    if (controllerLevel === 1 || controllerLevel === 2) {
+    if (true) {
       const roles: [Role, number][] = [[roleGeneric, 10]];
 
       // Spawn is busy
