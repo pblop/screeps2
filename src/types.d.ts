@@ -19,8 +19,8 @@ interface Memory {
 // }
 
 // This allows TypeScript to understand global.myVar
-// declare namespace NodeJS {
-//   interface Global {
-//     myVar: string;
-//   }
-// }
+declare namespace NodeJS {
+  interface Global {
+    SCRIPT_VERSION: string;
+  }
+}

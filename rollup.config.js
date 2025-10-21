@@ -19,7 +19,8 @@ export default {
   output: {
     file: "dist/main.js",
     format: "cjs",
-    sourcemap: true
+    sourcemap: true,
+    banner: `global.SCRIPT_VERSION = "${new Date().toISOString()}";`
   },
 
   plugins: [

@@ -10,6 +10,15 @@ const roles: { [name: string]: Role } = {
 export const loop = ErrorMapper.wrapLoop(() => {
   // SPAWNING LOGIC
   const mySpawn = Game.spawns.Spawn1;
+
+  // display global SCRIPT_VERSION above the spawn
+  if (global.SCRIPT_VERSION) {
+    mySpawn.room.visual.text(String(global.SCRIPT_VERSION), mySpawn.pos.x, mySpawn.pos.y - 1, {
+      align: 'center',
+      opacity: 0.8,
+      color: '#ffffff'
+    });
+  }
   if (mySpawn) {
     managerSpawn.run(mySpawn);
   }
