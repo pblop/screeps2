@@ -24,7 +24,7 @@
     "url": "git+https://github.com/screepers/screeps-typescript-starter.git"
   },
   "author": "",
-  "license": "Unlicense",
+  "license": "AGPL-3.0-only",
   "bugs": {
     "url": "https://github.com/screepers/screeps-typescript-starter/issues"
   },

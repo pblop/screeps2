@@ -1,40 +1,35 @@
+import { managerSpawn } from "managers/spawn";
+import { roleHarvester } from "roles/harvester";
 import { ErrorMapper } from "utils/ErrorMapper";
-
-declare global {
-  /*
-    Example types, expand on these or remove them and add your own.
-    Note: Values, properties defined here do no fully *exist* by this type definiton alone.
-          You must also give them an implemention if you would like to use them. (ex. actually setting a `role` property in a Creeps memory)
-
-    Types added in this `global` block are in an ambient, global context. This is needed because `main.ts` is a module file (uses import or export).
-    Interfaces matching on name from @types/screeps will be merged. This is how you can extend the 'built-in' interfaces from @types/screeps.
-  */
-  // Memory extension samples
-  interface Memory {
-    uuid: number;
-    // biome-ignore lint/suspicious/noExplicitAny: x
-    log: any;
-  }
-
-  interface CreepMemory {
-    role: string;
-    room: string;
-    working: boolean;
-  }
-
-  // Syntax for adding proprties to `global` (ex "global.log")
-  namespace NodeJS {
-    interface Global {
-      // biome-ignore lint/suspicious/noExplicitAny: x
-      log: any;
-    }
-  }
-}
 
 // When compiling TS to JS and bundling with rollup, the line numbers and file names in error messages change
 // This utility uses source maps to get the line numbers and file names of the original, TS source code
 export const loop = ErrorMapper.wrapLoop(() => {
-  console.log(`Current game tick is ${Game.time}`);
+  // console.log(`Current game tick is ${Game.time}`);
+
+  // SPAWNING LOGIC
+  // We can safely assume 'Spawn1' exists for this simple bot
+  const mySpawn = Game.spawns.Spawn1;
+  if (mySpawn) {
+    managerSpawn.run(mySpawn);
+  }
+
+  // CREEP LOGIC
+  for (const name in Game.creeps) {
+    const creep = Game.creeps[name];
+
+    // Your IDE will now autocomplete 'creep.memory.role'
+    // and warn you if you make a typo!
+    if (creep.memory.role === 'harvester') {
+      roleHarvester.run(creep);
+    }
+    if (creep.memory.role === 'upgrader') {
+      // roleUpgrader.run(creep); // (once you create this file)
+    }
+    if (creep.memory.role === 'builder') {
+      // roleBuilder.run(creep); // (once you create this file)
+    }
+  }
 
   // Automatically delete memory of missing creeps
   for (const name in Memory.creeps) {
