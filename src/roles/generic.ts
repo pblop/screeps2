@@ -1,3 +1,7 @@
+const initialBody = [WORK, CARRY, MOVE];
+const initialCost = BODYPART_COST[WORK] + BODYPART_COST[CARRY] + BODYPART_COST[MOVE];
+const nextBodyParts = [CARRY, MOVE, WORK, WORK, CARRY, MOVE, WORK];
+
 export const roleGeneric: Role = {
   str: 'generic',
   create: (): CreepMemory => {
@@ -6,15 +10,35 @@ export const roleGeneric: Role = {
       working: true
     };
   },
+  getBodySize: (energy: number): BodyPartConstant[] => {
+    const body = [...initialBody];
+    let cost = initialCost;
+
+    // cost < energy breaks early if we have exactly enough energy
+    // for the current body.
+    for (let i = 0; i < nextBodyParts.length && cost < energy; i++) {
+      const bodyPart = nextBodyParts[i];
+      const partCost = BODYPART_COST[bodyPart];
+
+      if (cost + partCost > energy || body.length === 50) {
+        break;
+      }
+
+      body.push(bodyPart);
+      cost += partCost;
+    }
+
+    return body;
+  },
   run: (creep: Creep) => {
     if (creep.memory.working && creep.store.getFreeCapacity() === 0) {
       creep.memory.working = false;
-      creep.say('🔄 deliver');
+      creep.say('🏠 deliver');
     }
 
     if (!creep.memory.working && creep.store[RESOURCE_ENERGY] === 0) {
       creep.memory.working = true;
-      creep.say('⚡ harvest');
+      creep.say('⛏️ harvest');
     }
 
     if (creep.memory.working) {

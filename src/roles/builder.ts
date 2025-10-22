@@ -6,6 +6,9 @@ export const roleBuilder: Role = {
       working: false
     };
   },
+  getBodySize: (energyAvailable: number): BodyPartConstant[] => {
+    return [WORK, CARRY, MOVE];
+  },
   run: (creep: Creep) => {
-  }
+  },
 };

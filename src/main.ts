@@ -1,6 +1,5 @@
 import { managerSpawn } from "managers/spawn";
 import { roleGeneric } from "roles/generic";
-import { roleUpgrader } from "roles/upgrader";
 import { ErrorMapper } from "utils/ErrorMapper";
 
 const roles: { [name: string]: Role } = {
@@ -18,12 +17,14 @@ export const loop = ErrorMapper.wrapLoop(() => {
       color: '#ffffff'
     });
   }
+
   if (Memory.genericTarget) {
     const target = Game.getObjectById<Structure>(Memory.genericTarget);
     if (target) {
       mySpawn.room.visual.circle(target.pos.x, target.pos.y, { radius: 0.5, fill: 'transparent', stroke: '#00ff00', strokeWidth: 0.1, opacity: 0.8 });
     }
   }
+
   if (mySpawn) {
     managerSpawn.run(mySpawn);
   }
