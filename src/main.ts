@@ -6,6 +6,9 @@ const roles: { [name: string]: Role } = {
   generic: roleGeneric,
 }
 export const loop = ErrorMapper.wrapLoop(() => {
+  Memory.constructionSites ??= [];
+  Memory.constructionSitesNumber ??= 0;
+
   // SPAWNING LOGIC
   const mySpawn = Game.spawns.Spawn1;
 
