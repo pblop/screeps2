@@ -26,19 +26,20 @@ function getBodyCost(body: BodyPartConstant[]): number {
   return _.sum(body, (part) => BODYPART_COST[part]);
 }
 
-function getEmptyPositionAround(room: Room, pos: RoomPosition): [number, number] | null {
+function getEmptyPositionAround(room: Room, pos: RoomPosition, radius=2): [number, number] | null {
   const area = room.lookAtArea(
-    Math.max(0, pos.y - 1),
-    Math.max(0, pos.x - 1),
-    Math.min(49, pos.y + 1),
-    Math.min(49, pos.x + 1),
+    Math.max(0, pos.y - radius),
+    Math.max(0, pos.x - radius),
+    Math.min(49, pos.y + radius),
+    Math.min(49, pos.x + radius),
     true
   );
   for (const look of area) {
     if (look.x === pos.x && look.y === pos.y) continue;
 
-    const hasTerrain = look.terrain && (look.terrain === 'plain');
-    if (!hasTerrain) continue;
+    if (look.structure) continue;
+    if (look.constructionSite) continue;
+    if (look.terrain === 'wall') continue;
 
     return [look.x, look.y];
   }
